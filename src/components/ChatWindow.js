@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import EmojiPicker from 'emoji-picker-react'
 import './ChatWindow.css';
 
@@ -14,7 +14,9 @@ import MicIcon from '@mui/icons-material/Mic';
 
 
 
-const ChatWindow = () => {
+const ChatWindow = ({user}) => {
+
+    const body = useRef();
 
     let recognition = null;
     let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -26,8 +28,38 @@ const ChatWindow = () => {
     const [emojiOpen, setEmojiOpen] = useState(false)
     const [text, setText] = useState('');
     const [listening, setListening] = useState(false);
-    const [list, setList] = useState([{}, {}, {}]);
+    const [list, setList] = useState([
+        {author: 123,  body: 'bla bla bla'},
+        {author: 456, body: 'bla bla'},
+        {author: 123 , body: 'bla bla bla bla'},
+        {author: 123,  body: 'bla bla bla'},
+        {author: 456, body: 'bla bla'},
+        {author: 123 , body: 'bla bla bla bla'},
+        {author: 123,  body: 'bla bla bla'},
+        {author: 456, body: 'bla bla'},
+        {author: 123 , body: 'bla bla bla bla'},
+        {author: 123,  body: 'bla bla bla'},
+        {author: 456, body: 'bla bla'},
+        {author: 123 , body: 'bla bla bla bla'},
+        {author: 123,  body: 'bla bla bla'},
+        {author: 456, body: 'bla bla'},
+        {author: 123 , body: 'bla bla bla bla'},
+        {author: 123,  body: 'bla bla bla'},
+        {author: 456, body: 'bla bla'},
+        {author: 123 , body: 'bla bla bla bla'},
+        {author: 123,  body: 'bla bla bla'},
+        {author: 456, body: 'bla bla'},
+        {author: 123 , body: 'bla bla bla bla'},
+        {author: 123,  body: 'bla bla bla'},
+        {author: 456, body: 'bla bla'},
+        {author: 123 , body: 'bla bla bla bla'}
+    ]);
 
+    useEffect(()=> {
+        if(body.current.scrollHeight > body.current.offsetHeight){
+            body.current.scrollTop = body.current.scrollHeight - body.current.offsetHeight
+        }
+    } ,[list])
 
     const handleEmojiClick = (e) => {
         (setText(text + e.emoji))
@@ -62,6 +94,10 @@ const ChatWindow = () => {
     }
 
     const handleSendClick = () => {
+        // console.log('testando 123');
+        // const newList = {...list, text}
+        // setList(newList);
+        // console.log(list.body)
 
     }
 
@@ -86,13 +122,20 @@ const ChatWindow = () => {
                 </div>
 
             </div>
-            <div className='chatWindow--body'>
-                {list.map((item, key) => (
-                    < Message
-                        key={key}
-                        data={item}
-                    />
-                ))}
+            <div ref={body} className='chatWindow--body'>
+
+                {list.length > 0 &&
+
+                    list.map((item, key) => (
+                        < Message
+                            key={key}
+                            data={item}
+                            user={user}
+                        />
+                    ))
+
+                    
+                }
 
             </div>
 
@@ -136,7 +179,7 @@ const ChatWindow = () => {
                         </div>
                     }
                     { text !== '' &&
-                        <div onClick={handleSendClick} className='chatWindow--btn'>
+                        <div onClick={() => handleSendClick()} className='chatWindow--btn'>
                             <SendIcon style={{color: '#919191'}}/>
                         </div>
                     }                
